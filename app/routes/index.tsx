@@ -1,5 +1,14 @@
+import type { LoaderFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { Form, Link } from '@remix-run/react'
 import { useOptionalUser } from '~/utils/misc'
+import { requireSessionUser } from '~/utils/session.server'
+
+export const loader: LoaderFunction = async ({ request }) => {
+  await requireSessionUser(request)
+
+  return redirect('/dashboard')
+}
 
 export default function Index() {
   const user = useOptionalUser()
