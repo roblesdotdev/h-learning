@@ -1,7 +1,11 @@
-### learning-henry
+### h-learning
 
-This app is created with
-the [quick-remix](https://github.com/roblesdotdev/quick-remix) stack.
+Henry Students Clone With Remix.
+
+Work in progress...
+
+This app is created with the
+[quick-remix](https://github.com/roblesdotdev/quick-remix) stack.
 
 ### Dev
 
