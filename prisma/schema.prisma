@@ -19,7 +19,7 @@ model Country {
 
 model User {
   id          String       @id @default(cuid())
-  username    String       @unique
+  username    String?      @unique
   email       String       @unique
   password    Password?
   contactInfo ContactInfo?
@@ -35,8 +35,8 @@ model ContactInfo {
 
   firstName String
   lastName  String
-  phone     String
-  github    String
+  phone     String?
+  github    String?
 }
 
 model Password {

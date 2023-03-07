@@ -1,10 +1,12 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useFetcher } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import CountriesSelect from '~/components/forms/countries-select'
-import { getJoinSession } from '~/utils/session.server'
+import { createUser } from '~/utils/auth.server'
+import { getCountries } from '~/utils/prisma.server'
+import { createUserSession, getJoinSession } from '~/utils/session.server'
 import {
   validateConfirmPassword,
   validateCountry,
@@ -13,6 +15,10 @@ import {
   validatePassword,
 } from '~/utils/validation'
 
+type LoaderData = {
+  countries: Awaited<ReturnType<typeof getCountries>>
+}
+
 export const loader: LoaderFunction = async ({ request }) => {
   const joinEmail = await getJoinSession(request)
 
@@ -20,22 +26,26 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect('/signup')
   }
 
-  return json({})
+  const countries = await getCountries()
+
+  return json<LoaderData>({
+    countries,
+  })
 }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  // const email = await getJoinSession(request)
+  const email = await getJoinSession(request)
   const {
-    firstname,
-    lastname,
+    firstname: firstName,
+    lastname: lastName,
     country,
     password,
     confirmPassword,
     termsAndConditions,
   } = Object.fromEntries(formData)
-  invariant(typeof firstname === 'string', 'firstname type is invalid')
-  invariant(typeof lastname === 'string', 'lastname type is invalid')
+  invariant(typeof firstName === 'string', 'firstname type is invalid')
+  invariant(typeof lastName === 'string', 'lastname type is invalid')
   invariant(typeof country === 'string', 'country type is invalid')
   invariant(typeof password === 'string', 'password type is invalid')
   invariant(
@@ -44,8 +54,8 @@ export const action: ActionFunction = async ({ request }) => {
   )
 
   const errors = {
-    firstname: validateName(firstname),
-    lastname: validateName(lastname),
+    firstname: validateName(firstName),
+    lastname: validateName(lastName),
     country: validateCountry(country),
     password: validatePassword(password),
     confirmPassword: validateConfirmPassword(password, confirmPassword),
@@ -55,17 +65,29 @@ export const action: ActionFunction = async ({ request }) => {
         : 'You must agree to terms and conditions',
   }
 
-  console.log(errors)
-
   if (Object.values(errors).some(Boolean)) {
     return json({ status: 'error', errors }, { status: 400 })
   }
 
-  return json({})
+  const user = await createUser({
+    firstName,
+    lastName,
+    countryId: country,
+    email,
+    password,
+  })
+
+  return await createUserSession({
+    request,
+    userId: user.id,
+    remember: true,
+    redirectTo: '/',
+  })
 }
 
 export default function Join() {
   const fetcher = useFetcher()
+  const { countries } = useLoaderData<LoaderData>()
   const errors = fetcher.data?.errors
   return (
     <div>
@@ -109,7 +131,10 @@ export default function Join() {
             </div>
           </div>
 
-          <CountriesSelect error={errors?.country ? errors.country : null} />
+          <CountriesSelect
+            countries={countries}
+            error={errors?.country ? errors.country : null}
+          />
 
           <div className="flex flex-col py-2">
             <label htmlFor="password">Password</label>

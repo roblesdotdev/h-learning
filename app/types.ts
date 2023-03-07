@@ -1,3 +1,3 @@
 export * from '../types'
 
-export type { User, Password } from '@prisma/client'
+export type { User, Password, Country, ContactInfo } from '@prisma/client'

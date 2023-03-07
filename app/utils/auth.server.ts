@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import type { User } from '~/types'
+import type { ContactInfo, User } from '~/types'
 import { db } from './db.server'
 
 export async function getUserById(
@@ -26,8 +26,8 @@ export async function verifyCredentials({
     where: { email },
     select: {
       id: true,
-      email: true,
       username: true,
+      email: true,
       password: true,
     },
   })
@@ -45,16 +45,27 @@ export async function verifyCredentials({
 }
 
 export async function createUser({
+  firstName,
+  lastName,
+  countryId,
   email,
-  username,
   password,
-}: Pick<User, 'email' | 'username'> & { password: string }) {
+}: Pick<User, 'email' | 'countryId'> & { password: string } & Pick<
+    ContactInfo,
+    'firstName' | 'lastName'
+  >) {
   const hashedPassword = await bcrypt.hash(password, 10)
 
   return db.user.create({
     data: {
       email,
-      username,
+      countryId,
+      contactInfo: {
+        create: {
+          firstName,
+          lastName,
+        },
+      },
       password: {
         create: {
           hash: hashedPassword,

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import bcrypt from 'bcryptjs'
 import type { User, Password } from '~/types'
 
-export function createUser(username: string): Pick<User, 'email' | 'username'> {
+export function createUser(username: string): Pick<User, 'username' | 'email'> {
   return {
     username,
     email: `${username}@email.com`,
