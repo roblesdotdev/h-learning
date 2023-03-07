@@ -31,6 +31,6 @@ export async function validateUsernameExistence(username: string) {
   return u ? 'Username is already taken' : null
 }
 
-export async function validateCountry(countryId: string) {
+export function validateCountry(countryId: string) {
   return !countryId.length ? 'Please select a country' : null
 }

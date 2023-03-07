@@ -8,7 +8,7 @@ const countries = [
   { id: 3, name: 'Colombia' },
 ]
 
-export default function CountriesSelect() {
+export default function CountriesSelect({ error }: { error?: string | null }) {
   const [selected, setSelected] = useState<{ id: string; name: string } | null>(
     null,
   )
@@ -72,6 +72,7 @@ export default function CountriesSelect() {
           </Transition>
         </div>
       </Listbox>
+      {error ? <span className="text-sm text-red-600">{error}</span> : null}
     </div>
   )
 }

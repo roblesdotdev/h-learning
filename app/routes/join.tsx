@@ -55,6 +55,8 @@ export const action: ActionFunction = async ({ request }) => {
         : 'You must agree to terms and conditions',
   }
 
+  console.log(errors)
+
   if (Object.values(errors).some(Boolean)) {
     return json({ status: 'error', errors }, { status: 400 })
   }
@@ -107,7 +109,7 @@ export default function Join() {
             </div>
           </div>
 
-          <CountriesSelect />
+          <CountriesSelect error={errors?.country ? errors.country : null} />
 
           <div className="flex flex-col py-2">
             <label htmlFor="password">Password</label>
