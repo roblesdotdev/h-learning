@@ -5,7 +5,13 @@ import { useFetcher } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import CountriesSelect from '~/components/forms/countries-select'
 import { getJoinSession } from '~/utils/session.server'
-import { validateEmail } from '~/utils/validation'
+import {
+  validateConfirmPassword,
+  validateCountry,
+  validateEmail,
+  validateName,
+  validatePassword,
+} from '~/utils/validation'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const joinEmail = await getJoinSession(request)
@@ -20,8 +26,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   // const email = await getJoinSession(request)
-  const { firstname, lastname, country, password, confirmPassword } =
-    Object.fromEntries(formData)
+  const {
+    firstname,
+    lastname,
+    country,
+    password,
+    confirmPassword,
+    termsAndConditions,
+  } = Object.fromEntries(formData)
   invariant(typeof firstname === 'string', 'firstname type is invalid')
   invariant(typeof lastname === 'string', 'lastname type is invalid')
   invariant(typeof country === 'string', 'country type is invalid')
@@ -31,12 +43,9 @@ export const action: ActionFunction = async ({ request }) => {
     'confirmPassword type is invalid',
   )
 
-  console.log(Object.fromEntries(formData))
-
-  /* 
   const errors = {
-    firstName: validateName(firstName),
-    lastName: validateName(lastName),
+    firstname: validateName(firstname),
+    lastname: validateName(lastname),
     country: validateCountry(country),
     password: validatePassword(password),
     confirmPassword: validateConfirmPassword(password, confirmPassword),
@@ -49,7 +58,6 @@ export const action: ActionFunction = async ({ request }) => {
   if (Object.values(errors).some(Boolean)) {
     return json({ status: 'error', errors }, { status: 400 })
   }
-  */
 
   return json({})
 }
@@ -59,7 +67,7 @@ export default function Join() {
   const errors = fetcher.data?.errors
   return (
     <div>
-      <fetcher.Form method="post" noValidate>
+      <fetcher.Form method="post" noValidate autoComplete="off">
         <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
           <h1 className="mb-4 text-xl font-bold">Register</h1>
           <div className="flex flex-col sm:flex-row sm:gap-4">
