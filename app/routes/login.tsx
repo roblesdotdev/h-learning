@@ -5,7 +5,7 @@ import { Link, useFetcher, useSearchParams } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import { verifyCredentials } from '~/utils/auth.server'
 import { createUserSession, getSessionUser } from '~/utils/session.server'
-import { validatePassword, validateUsername } from '~/utils/validation'
+import { validatePassword, validateEmail } from '~/utils/validation'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getSessionUser(request)
@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 type ActionData = {
   status: 'success' | 'error'
   errors?: {
-    username?: string | null
+    email?: string | null
     password?: string | null
     form?: string | null
   } | null
@@ -26,14 +26,13 @@ type ActionData = {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  const { username, password, remember, redirectTo } =
-    Object.fromEntries(formData)
-  invariant(typeof username === 'string', 'username type invalid')
+  const { email, password, remember, redirectTo } = Object.fromEntries(formData)
+  invariant(typeof email === 'string', 'email type invalid')
   invariant(typeof password === 'string', 'password type invalid')
   invariant(typeof redirectTo === 'string', 'redirectTo type invalid')
 
   const errors = {
-    username: validateUsername(username),
+    email: validateEmail(email),
     password: validatePassword(password),
   }
 
@@ -41,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json<ActionData>({ status: 'error', errors }, { status: 400 })
   }
 
-  const user = await verifyCredentials({ username, password })
+  const user = await verifyCredentials({ email, password })
   if (!user) {
     return json<ActionData>(
       { status: 'error', errors: { form: 'Invalid username or password' } },
@@ -65,7 +64,13 @@ export default function LoginRoute() {
 
   return (
     <div>
-      <fetcher.Form method="post" noValidate aria-describedby="form-error">
+      <fetcher.Form
+        method="post"
+        autoComplete="off"
+        spellCheck="false"
+        noValidate
+        aria-describedby="form-error"
+      >
         <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
           <div className="py-4">
             <h1 className="text-2xl font-bold">Welcome Back</h1>
@@ -74,19 +79,19 @@ export default function LoginRoute() {
             </h2>
           </div>
           <div className="flex flex-col py-2">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email">Email</label>
             <input
               className="w-full rounded-md px-2 py-3"
-              placeholder="Enter your username..."
-              type="text"
-              name="username"
-              id="username"
+              placeholder="Enter your email address..."
+              type="email"
+              name="email"
+              id="email"
               aria-describedby="username-error"
               aria-invalid={Boolean(errors?.username)}
             />
-            {errors?.username ? (
+            {errors?.email ? (
               <span id="username-error" className="text-sm text-red-600">
-                {errors.username}
+                {errors.email}
               </span>
             ) : null}
           </div>

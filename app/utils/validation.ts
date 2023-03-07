@@ -1,7 +1,7 @@
 import { db } from './db.server'
 
-export function validateUsername(username: string) {
-  return username.length < 4 ? 'Username is too short' : null
+export function validateName(name: string) {
+  return name.length < 3 ? 'Username is too short' : null
 }
 
 export function validatePassword(password: string) {
@@ -29,4 +29,8 @@ export async function validateEmailExistence(email: string) {
 export async function validateUsernameExistence(username: string) {
   const u = await db.user.findUnique({ where: { username } })
   return u ? 'Username is already taken' : null
+}
+
+export function validateCountry(countryId: string) {
+  return !countryId.length ? 'Please select a country' : null
 }

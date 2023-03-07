@@ -16,14 +16,14 @@ export async function getUserById(
 }
 
 export async function verifyCredentials({
-  username,
+  email,
   password,
 }: {
-  username: User['username']
+  email: User['email']
   password: string
 }) {
   const userWithPassword = await db.user.findUnique({
-    where: { username },
+    where: { email },
     select: {
       id: true,
       email: true,
