@@ -67,7 +67,12 @@ export default function LoginRoute() {
     <div>
       <fetcher.Form method="post" noValidate aria-describedby="form-error">
         <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
-          <h1 className="mb-4 text-xl font-bold">Login</h1>
+          <div className="py-4">
+            <h1 className="text-2xl font-bold">Welcome Back</h1>
+            <h2 className="text-lg">
+              Take your programming skills to the next level.
+            </h2>
+          </div>
           <div className="flex flex-col py-2">
             <label htmlFor="username">Username</label>
             <input

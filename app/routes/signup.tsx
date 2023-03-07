@@ -74,7 +74,10 @@ export default function Signup() {
   return (
     <div>
       <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
-        <h1 className="mb-4 text-xl font-bold">Register</h1>
+        <div className="py-4">
+          <h1 className="text-2xl font-bold">Discover your future</h1>
+          <h2 className="text-lg">We need your email to continue</h2>
+        </div>
         {isSuccess ? (
           <h2>Please check your email</h2>
         ) : (
@@ -97,7 +100,6 @@ function RegisterForm({ fetcher }: { fetcher: FetcherWithComponents<any> }) {
   const errors = fetcher.data?.errors
   return (
     <fetcher.Form method="post" noValidate aria-describedby="form-error">
-      <h2>We need your email to continue</h2>
       <div className="flex flex-col py-2">
         <input
           className="w-full rounded-md px-2 py-3"
