@@ -10,13 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Country {
+  id   String @id @default(cuid())
+  name String
+
+  users User[]
+}
+
 model User {
-  id        String    @id @default(cuid())
-  username  String    @unique
-  email     String    @unique
-  password  Password?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          String       @id @default(cuid())
+  username    String       @unique
+  email       String       @unique
+  password    Password?
+  contactInfo ContactInfo?
+  country     Country?     @relation(fields: [countryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  countryId   String?
+}
+
+model ContactInfo {
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+
+  firstName String
+  lastName  String
+  phone     String
+  github    String
 }
 
 model Password {
