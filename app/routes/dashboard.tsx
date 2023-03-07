@@ -16,7 +16,8 @@ export default function ProtectedRoute() {
     <div className="">
       <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
         <h1>
-          Protected Route for <span className="font-bold">{user.username}</span>
+          Protected Route for{' '}
+          <span className="font-bold">{user.username ?? user.email}</span>
         </h1>
         <Form method="post" action="/logout">
           <button type="submit" className="text-red-600 underline">
