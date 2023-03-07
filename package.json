@@ -17,6 +17,7 @@
     "setup": "run-s setup:*"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
     "@prisma/client": "^4.11.0",
     "@remix-run/node": "^1.14.0",
     "@remix-run/react": "^1.14.0",

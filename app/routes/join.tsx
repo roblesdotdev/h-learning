@@ -3,15 +3,9 @@ import { redirect } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
 import invariant from 'tiny-invariant'
-import { createUser } from '~/utils/auth.server'
-import { createUserSession, getJoinSession } from '~/utils/session.server'
-import {
-  validateConfirmPassword,
-  validateEmail,
-  validatePassword,
-  validateUsername,
-  validateUsernameExistence,
-} from '~/utils/validation'
+import CountriesSelect from '~/components/forms/countries-select'
+import { getJoinSession } from '~/utils/session.server'
+import { validateEmail } from '~/utils/validation'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const joinEmail = await getJoinSession(request)
@@ -25,19 +19,25 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  const email = await getJoinSession(request)
-  const { username, password, confirmPassword, termsAndConditions } =
+  // const email = await getJoinSession(request)
+  const { firstname, lastname, country, password, confirmPassword } =
     Object.fromEntries(formData)
-  invariant(typeof username === 'string', 'username type is invalid')
+  invariant(typeof firstname === 'string', 'firstname type is invalid')
+  invariant(typeof lastname === 'string', 'lastname type is invalid')
+  invariant(typeof country === 'string', 'country type is invalid')
   invariant(typeof password === 'string', 'password type is invalid')
   invariant(
     typeof confirmPassword === 'string',
     'confirmPassword type is invalid',
   )
 
+  console.log(Object.fromEntries(formData))
+
+  /* 
   const errors = {
-    username:
-      validateUsername(username) || (await validateUsernameExistence(username)),
+    firstName: validateName(firstName),
+    lastName: validateName(lastName),
+    country: validateCountry(country),
     password: validatePassword(password),
     confirmPassword: validateConfirmPassword(password, confirmPassword),
     termsAndConditions:
@@ -49,15 +49,9 @@ export const action: ActionFunction = async ({ request }) => {
   if (Object.values(errors).some(Boolean)) {
     return json({ status: 'error', errors }, { status: 400 })
   }
+  */
 
-  const user = await createUser({ email, username, password })
-
-  return await createUserSession({
-    request,
-    userId: user.id,
-    remember: true,
-    redirectTo: '/',
-  })
+  return json({})
 }
 
 export default function Join() {
@@ -68,23 +62,45 @@ export default function Join() {
       <fetcher.Form method="post" noValidate>
         <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
           <h1 className="mb-4 text-xl font-bold">Register</h1>
-          <div className="flex flex-col py-2">
-            <label htmlFor="username">Username</label>
-            <input
-              className="w-full rounded-md px-2 py-3"
-              placeholder="Enter your username..."
-              type="text"
-              name="username"
-              id="username"
-              aria-describedby="username-error"
-              aria-invalid={Boolean(errors?.username)}
-            />
-            {errors?.username ? (
-              <span id="username-error" className="text-sm text-red-600">
-                {errors.username}
-              </span>
-            ) : null}
+          <div className="flex flex-col sm:flex-row sm:gap-4">
+            <div className="flex flex-col py-2">
+              <label htmlFor="firstname">First Name</label>
+              <input
+                className="w-full rounded-md px-2 py-3"
+                placeholder="Enter your first name..."
+                type="text"
+                name="firstname"
+                id="firstname"
+                aria-errormessage="firstname-error"
+                aria-invalid={Boolean(errors?.firstname)}
+              />
+              {errors?.firstname ? (
+                <span id="firstname-error" className="text-sm text-red-600">
+                  {errors.firstname}
+                </span>
+              ) : null}
+            </div>
+            <div className="flex flex-col py-2">
+              <label htmlFor="lastname">Last Name</label>
+              <input
+                className="w-full rounded-md px-2 py-3"
+                placeholder="Enter your last name..."
+                type="text"
+                name="lastname"
+                id="lastname"
+                aria-errormessage="lastname-error"
+                aria-invalid={Boolean(errors?.lastname)}
+              />
+              {errors?.lastname ? (
+                <span id="lastname-error" className="text-sm text-red-600">
+                  {errors.lastname}
+                </span>
+              ) : null}
+            </div>
           </div>
+
+          <CountriesSelect />
+
           <div className="flex flex-col py-2">
             <label htmlFor="password">Password</label>
             <input
