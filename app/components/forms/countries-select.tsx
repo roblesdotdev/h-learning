@@ -1,14 +1,15 @@
 import { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '~/components/icons'
+import type { Country } from '~/types'
 
-const countries = [
-  { id: 1, name: 'Argentina' },
-  { id: 2, name: 'Brasil' },
-  { id: 3, name: 'Colombia' },
-]
-
-export default function CountriesSelect({ error }: { error?: string | null }) {
+export default function CountriesSelect({
+  countries,
+  error,
+}: {
+  countries: Country[]
+  error?: string | null
+}) {
   const [selected, setSelected] = useState<{ id: string; name: string } | null>(
     null,
   )

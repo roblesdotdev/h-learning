@@ -1,9 +1,10 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useFetcher } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import CountriesSelect from '~/components/forms/countries-select'
+import { getCountries } from '~/utils/prisma.server'
 import { getJoinSession } from '~/utils/session.server'
 import {
   validateConfirmPassword,
@@ -13,6 +14,10 @@ import {
   validatePassword,
 } from '~/utils/validation'
 
+type LoaderData = {
+  countries: Awaited<ReturnType<typeof getCountries>>
+}
+
 export const loader: LoaderFunction = async ({ request }) => {
   const joinEmail = await getJoinSession(request)
 
@@ -20,7 +25,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect('/signup')
   }
 
-  return json({})
+  const countries = await getCountries()
+
+  return json<LoaderData>({
+    countries,
+  })
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -55,17 +64,18 @@ export const action: ActionFunction = async ({ request }) => {
         : 'You must agree to terms and conditions',
   }
 
-  console.log(errors)
-
   if (Object.values(errors).some(Boolean)) {
     return json({ status: 'error', errors }, { status: 400 })
   }
+
+  /* TODO: CREATE USER */
 
   return json({})
 }
 
 export default function Join() {
   const fetcher = useFetcher()
+  const { countries } = useLoaderData<LoaderData>()
   const errors = fetcher.data?.errors
   return (
     <div>
@@ -109,7 +119,10 @@ export default function Join() {
             </div>
           </div>
 
-          <CountriesSelect error={errors?.country ? errors.country : null} />
+          <CountriesSelect
+            countries={countries}
+            error={errors?.country ? errors.country : null}
+          />
 
           <div className="flex flex-col py-2">
             <label htmlFor="password">Password</label>
