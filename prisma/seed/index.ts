@@ -38,10 +38,10 @@ async function seed() {
       ...userData,
       countryId,
       contactInfo: {
-        create: createContactInfo(userData.username),
+        create: createContactInfo(userData.username ?? 'remixer'),
       },
       password: {
-        create: createPassword(userData.username),
+        create: createPassword(userData.username ?? 'remixer'),
       },
     },
   })

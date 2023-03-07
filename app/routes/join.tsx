@@ -4,8 +4,9 @@ import { json } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import CountriesSelect from '~/components/forms/countries-select'
+import { createUser } from '~/utils/auth.server'
 import { getCountries } from '~/utils/prisma.server'
-import { getJoinSession } from '~/utils/session.server'
+import { createUserSession, getJoinSession } from '~/utils/session.server'
 import {
   validateConfirmPassword,
   validateCountry,
@@ -34,17 +35,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  // const email = await getJoinSession(request)
+  const email = await getJoinSession(request)
   const {
-    firstname,
-    lastname,
+    firstname: firstName,
+    lastname: lastName,
     country,
     password,
     confirmPassword,
     termsAndConditions,
   } = Object.fromEntries(formData)
-  invariant(typeof firstname === 'string', 'firstname type is invalid')
-  invariant(typeof lastname === 'string', 'lastname type is invalid')
+  invariant(typeof firstName === 'string', 'firstname type is invalid')
+  invariant(typeof lastName === 'string', 'lastname type is invalid')
   invariant(typeof country === 'string', 'country type is invalid')
   invariant(typeof password === 'string', 'password type is invalid')
   invariant(
@@ -53,8 +54,8 @@ export const action: ActionFunction = async ({ request }) => {
   )
 
   const errors = {
-    firstname: validateName(firstname),
-    lastname: validateName(lastname),
+    firstname: validateName(firstName),
+    lastname: validateName(lastName),
     country: validateCountry(country),
     password: validatePassword(password),
     confirmPassword: validateConfirmPassword(password, confirmPassword),
@@ -68,9 +69,20 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ status: 'error', errors }, { status: 400 })
   }
 
-  /* TODO: CREATE USER */
+  const user = await createUser({
+    firstName,
+    lastName,
+    countryId: country,
+    email,
+    password,
+  })
 
-  return json({})
+  return await createUserSession({
+    request,
+    userId: user.id,
+    remember: true,
+    redirectTo: '/',
+  })
 }
 
 export default function Join() {
