@@ -1,7 +1,9 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { Form } from '@remix-run/react'
-import { useUser } from '~/utils/misc'
+import { Outlet } from '@remix-run/react'
+import Footer from '~/components/footer'
+import Navbar from '~/components/navbar'
+import Sidebar from '~/components/sidebar'
 import { requireSessionUser } from '~/utils/session.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -11,19 +13,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function ProtectedRoute() {
-  const user = useUser()
   return (
-    <div className="">
-      <div className="mx-auto max-w-xl px-4 pt-16 pb-4">
-        <h1>
-          Protected Route for{' '}
-          <span className="font-bold">{user.username ?? user.email}</span>
-        </h1>
-        <Form method="post" action="/logout">
-          <button type="submit" className="text-red-600 underline">
-            Logout
-          </button>
-        </Form>
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
+      <div className="relative flex flex-1">
+        <Sidebar />
+        <main className="ml-56 flex w-full flex-1 flex-col">
+          <div className="flex-1 p-6">
+            <Outlet />
+          </div>
+          <Footer />
+        </main>
       </div>
     </div>
   )
