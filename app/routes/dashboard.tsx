@@ -58,7 +58,7 @@ export default function ProtectedRoute() {
         <main
           className={clsx(
             'flex w-full flex-1 flex-col transition-all duration-300',
-            visibleSide && !isMobile && 'ml-56',
+            visibleSide && 'xs:ml-56',
           )}
         >
           <div className="flex-1 p-6">

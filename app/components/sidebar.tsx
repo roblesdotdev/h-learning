@@ -11,6 +11,19 @@ import {
   PlayIcon,
 } from './icons'
 
+const SIDE_LINKS = [
+  { title: 'Inicio', to: '/dashboard', icon: <HomeIcon /> },
+  { title: 'Mi Cohorte', to: '/dashboard/cohort', icon: <GroupIcon /> },
+  { title: 'Videos', to: '/dashboard/videos', icon: <PlayIcon /> },
+  { title: 'Proyectos', to: '/dashboard/projects', icon: <BriefCaseIcon /> },
+  { title: 'Favoritos', to: '/dashboard/favorites', icon: <HeartIcon /> },
+]
+
+const EXTERNAL_LINKS = [
+  { title: 'Calendario', href: 'https://gogle.com' },
+  { title: 'Solicitudes', href: 'https://gogle.com' },
+]
+
 const Sidebar = forwardRef<HTMLDivElement, { visible: boolean }>(
   ({ visible }, ref) => {
     return (
@@ -20,51 +33,21 @@ const Sidebar = forwardRef<HTMLDivElement, { visible: boolean }>(
       >
         <nav className="flex flex-1 flex-col justify-between">
           <ul className="flex flex-col gap-6 p-6">
-            <li>
-              <SideLink to="/dashboard" icon={<HomeIcon />} title="Home" />
-            </li>
-            <li>
-              <SideLink
-                to="/dashboard/cohort"
-                icon={<GroupIcon />}
-                title="My cohort"
-              />
-            </li>
-            <li>
-              <SideLink
-                to="/dashboard/videos"
-                icon={<PlayIcon />}
-                title="Videos"
-              />
-            </li>
-            <li>
-              <SideLink
-                to="/dashboard/projects"
-                icon={<BriefCaseIcon />}
-                title="Projects"
-              />
-            </li>
-            <li>
-              <SideLink
-                to="/dashboard/favorites"
-                icon={<HeartIcon />}
-                title="Favorites"
-              />
-            </li>
+            {SIDE_LINKS.map(link => (
+              <li key={link.to}>
+                <SideLink to={link.to} icon={link.icon} title={link.title} />
+              </li>
+            ))}
           </ul>
           <ul className="flex flex-col gap-4 p-6 text-left">
-            <a href="https://google.com" target="_blank" rel="noreferrer">
-              <div className="flex items-center gap-2">
-                <span>Calendario</span>
-                <ExternalIcon className="h-3 w-3" />
-              </div>
-            </a>
-            <a href="https://google.com" target="_blank" rel="noreferrer">
-              <div className="flex items-center gap-2">
-                <span>Solicitudes</span>
-                <ExternalIcon className="h-3 w-3" />
-              </div>
-            </a>
+            {EXTERNAL_LINKS.map((link, idx) => (
+              <a href={link.href} key={idx} target="_blank" rel="noreferrer">
+                <div className="flex items-center gap-2">
+                  <span>{link.title}</span>
+                  <ExternalIcon className="h-3 w-3" />
+                </div>
+              </a>
+            ))}
           </ul>
         </nav>
       </div>
