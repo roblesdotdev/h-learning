@@ -1,34 +1,64 @@
 import { NavLink } from '@remix-run/react'
 import clsx from 'clsx'
 import type { ReactElement } from 'react'
+import {
+  BriefCaseIcon,
+  ExternalIcon,
+  GroupIcon,
+  HeartIcon,
+  HomeIcon,
+  PlayIcon,
+} from './icons'
 
 export default function Sidebar() {
   return (
     <div className="fixed inset-y-0 mt-[89px] flex w-56 border-r">
       <nav className="flex flex-1 flex-col justify-between">
-        <ul className="flex flex-col gap-4 p-6">
+        <ul className="flex flex-col gap-6 p-6">
           <li>
-            <SideLink to="/dashboard">Home</SideLink>
+            <SideLink to="/dashboard" icon={<HomeIcon />} title="Home" />
           </li>
           <li>
-            <SideLink to="/dashboard/cohort">My Cohort</SideLink>
+            <SideLink
+              to="/dashboard/cohort"
+              icon={<GroupIcon />}
+              title="My cohort"
+            />
           </li>
           <li>
-            <SideLink to="/dashboard/videos">Videos</SideLink>
+            <SideLink
+              to="/dashboard/videos"
+              icon={<PlayIcon />}
+              title="Videos"
+            />
           </li>
           <li>
-            <SideLink to="/dashboard/projects">Projects</SideLink>
+            <SideLink
+              to="/dashboard/projects"
+              icon={<BriefCaseIcon />}
+              title="Projects"
+            />
           </li>
           <li>
-            <SideLink to="/dashboard/favorites">Favorites</SideLink>
+            <SideLink
+              to="/dashboard/favorites"
+              icon={<HeartIcon />}
+              title="Favorites"
+            />
           </li>
         </ul>
         <ul className="flex flex-col gap-4 p-6 text-left">
           <a href="https://google.com" target="_blank" rel="noreferrer">
-            Calendar
+            <div className="flex items-center gap-2">
+              <span>Calendario</span>
+              <ExternalIcon className="h-3 w-3" />
+            </div>
           </a>
           <a href="https://google.com" target="_blank" rel="noreferrer">
-            Migrations
+            <div className="flex items-center gap-2">
+              <span>Solicitudes</span>
+              <ExternalIcon className="h-3 w-3" />
+            </div>
           </a>
         </ul>
       </nav>
@@ -38,10 +68,11 @@ export default function Sidebar() {
 
 type SideLinkProps = {
   to: string
-  children: string | ReactElement
+  icon: ReactElement
+  title: string
 }
 
-function SideLink({ to, children }: SideLinkProps) {
+function SideLink({ to, icon, title }: SideLinkProps) {
   return (
     <NavLink
       className={({ isActive }) => clsx(isActive && 'text-red-300')}
@@ -49,7 +80,10 @@ function SideLink({ to, children }: SideLinkProps) {
       prefetch="intent"
       end
     >
-      {children}
+      <div className="flex items-center gap-2">
+        {icon}
+        <span>{title}</span>
+      </div>
     </NavLink>
   )
 }
