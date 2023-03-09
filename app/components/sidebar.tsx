@@ -24,36 +24,37 @@ const EXTERNAL_LINKS = [
   { title: 'Solicitudes', href: 'https://gogle.com' },
 ]
 
-const Sidebar = forwardRef<HTMLDivElement, { visible: boolean }>(
-  ({ visible }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className="fixed inset-y-0 mt-[85px] flex w-56 border-r bg-slate-50"
-      >
-        <nav className="flex flex-1 flex-col justify-between">
-          <ul className="flex flex-col gap-6 p-6">
-            {SIDE_LINKS.map(link => (
-              <li key={link.to}>
-                <SideLink to={link.to} icon={link.icon} title={link.title} />
-              </li>
-            ))}
-          </ul>
-          <ul className="flex flex-col gap-4 p-6 text-left">
-            {EXTERNAL_LINKS.map((link, idx) => (
-              <a href={link.href} key={idx} target="_blank" rel="noreferrer">
-                <div className="flex items-center gap-2">
-                  <span>{link.title}</span>
-                  <ExternalIcon className="h-3 w-3" />
-                </div>
-              </a>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    )
-  },
-)
+const Sidebar = forwardRef<
+  HTMLDivElement,
+  { visible: boolean; isMobile?: boolean }
+>(({ visible }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className="fixed inset-y-0 mt-[85px] flex w-56 border-r bg-slate-50"
+    >
+      <nav className="flex flex-1 flex-col justify-between">
+        <ul className="flex flex-col gap-6 p-6">
+          {SIDE_LINKS.map(link => (
+            <li key={link.to}>
+              <SideLink to={link.to} icon={link.icon} title={link.title} />
+            </li>
+          ))}
+        </ul>
+        <ul className="flex flex-col gap-4 p-6 text-left">
+          {EXTERNAL_LINKS.map((link, idx) => (
+            <a href={link.href} key={idx} target="_blank" rel="noreferrer">
+              <div className="flex items-center gap-2">
+                <span>{link.title}</span>
+                <ExternalIcon className="h-3 w-3" />
+              </div>
+            </a>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  )
+})
 
 type SideLinkProps = {
   to: string

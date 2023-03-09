@@ -17,15 +17,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function ProtectedRoute() {
   const [visibleSide, setVisibleSide] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
 
   function handleResize() {
-    if (innerWidth <= 640) {
+    if (innerWidth <= 768) {
       setVisibleSide(false)
-      setIsMobile(true)
     } else {
       setVisibleSide(true)
-      setIsMobile(false)
     }
   }
 
@@ -58,7 +55,7 @@ export default function ProtectedRoute() {
         <main
           className={clsx(
             'flex w-full flex-1 flex-col transition-all duration-300',
-            visibleSide && 'xs:ml-56',
+            visibleSide && 'md:ml-56',
           )}
         >
           <div className="flex-1 p-6">

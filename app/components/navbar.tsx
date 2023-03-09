@@ -12,12 +12,17 @@ import {
   UserCircleIcon,
 } from './icons'
 
-export default function Navbar({ onShowSide }: { onShowSide: () => void }) {
+export default function Navbar({
+  onShowSide,
+}: {
+  isMobile?: boolean
+  onShowSide: () => void
+}) {
   return (
     <div className="sticky inset-x-0 top-0 z-50 border-b bg-slate-50 p-6">
       <nav className="flex items-center justify-between">
-        <div className="flex items-center gap-2 sm:gap-0">
-          <button className="sm:hidden" onClick={onShowSide}>
+        <div className="flex items-center gap-2 md:gap-0">
+          <button className="md:hidden" onClick={onShowSide}>
             <span className="sr-only">Sidebar Button</span>
             <BarsIcon />
           </button>
