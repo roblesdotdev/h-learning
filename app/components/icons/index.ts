@@ -1,3 +1,4 @@
+export { default as BarsIcon } from './bars'
 export { default as BellIcon } from './bell'
 export { default as BriefCaseIcon } from './briefcase'
 export { default as CheckIcon } from './check'

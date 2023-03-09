@@ -2,6 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Link } from '@remix-run/react'
 import { Fragment } from 'react'
 import {
+  BarsIcon,
   BellIcon,
   ChevronDownIcon,
   CogIcon,
@@ -11,19 +12,25 @@ import {
   UserCircleIcon,
 } from './icons'
 
-export default function Navbar() {
+export default function Navbar({ onShowSide }: { onShowSide: () => void }) {
   return (
     <div className="sticky inset-x-0 top-0 z-50 border-b bg-slate-50 p-6">
       <nav className="flex items-center justify-between">
-        <Link to="/" prefetch="intent">
-          <h1>H-Labs</h1>
-        </Link>
+        <div className="flex items-center gap-2 sm:gap-0">
+          <button className="sm:hidden" onClick={onShowSide}>
+            <span className="sr-only">Sidebar Button</span>
+            <BarsIcon />
+          </button>
+          <Link to="/" prefetch="intent">
+            <h1 className="font-bold">H-Labs</h1>
+          </Link>
+        </div>
         <ul className="flex items-center gap-4">
           <li>
             <button>
               <div className="flex items-center gap-2">
                 <SearchIcon />
-                <span>Buscar...</span>
+                <span className="sr-only sm:not-sr-only">Buscar...</span>
               </div>
             </button>
           </li>
@@ -31,7 +38,7 @@ export default function Navbar() {
             <button>
               <div className="flex items-center gap-2">
                 <BellIcon />
-                <span>Notificaciones</span>
+                <span className="sr-only">Notificaciones</span>
               </div>
             </button>
           </li>
@@ -39,7 +46,7 @@ export default function Navbar() {
             <button>
               <div className="flex items-center gap-2">
                 <QuestionMarkCircleIcon />
-                <span>Ayuda</span>
+                <span className="sr-only">Ayuda</span>
               </div>
             </button>
           </li>
