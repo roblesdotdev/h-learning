@@ -1,4 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
+import { Form } from '@remix-run/react'
 import { Fragment } from 'react'
 import {
   BarsIcon,
@@ -133,16 +134,18 @@ function MenuButton() {
             <div className="p-1">
               <Menu.Item>
                 {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md p-2 text-sm`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <PowerIcon />
-                      <span>Logout</span>
-                    </div>
-                  </button>
+                  <Form method="post" action="/logout">
+                    <button
+                      className={`${
+                        active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                      } group flex w-full items-center rounded-md p-2 text-sm`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <PowerIcon />
+                        <span>Logout</span>
+                      </div>
+                    </button>
+                  </Form>
                 )}
               </Menu.Item>
             </div>

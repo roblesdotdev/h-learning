@@ -51,7 +51,12 @@ const Sidebar = forwardRef<
           <ul className="flex flex-col gap-6 p-6">
             {SIDE_LINKS.map(link => (
               <li key={link.to}>
-                <SideLink to={link.to} icon={link.icon} title={link.title} />
+                <SideLink
+                  to={link.to}
+                  icon={link.icon}
+                  title={link.title}
+                  onClick={onClose}
+                />
               </li>
             ))}
           </ul>
@@ -75,14 +80,16 @@ type SideLinkProps = {
   to: string
   icon: ReactElement
   title: string
+  onClick?: () => void
 }
 
-function SideLink({ to, icon, title }: SideLinkProps) {
+function SideLink({ to, icon, title, onClick }: SideLinkProps) {
   return (
     <NavLink
       className={({ isActive }) => clsx(isActive && 'text-red-300')}
       to={to}
       prefetch="intent"
+      onClick={onClick}
       end
     >
       <div className="flex items-center gap-2">
