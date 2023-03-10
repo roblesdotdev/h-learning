@@ -4,9 +4,8 @@ import { json } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import clsx from 'clsx'
 import { Fragment, useEffect, useState } from 'react'
-import Footer from '~/components/footer'
-import Navbar from '~/components/navbar'
 import Sidebar from '~/components/sidebar'
+import Topbar from '~/components/topbar'
 import { requireSessionUser } from '~/utils/session.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -15,14 +14,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({})
 }
 
-export default function ProtectedRoute() {
-  const [visibleSide, setVisibleSide] = useState(true)
+export default function DashboardLayout() {
+  const [showSide, setShowSide] = useState(true)
 
   function handleResize() {
-    if (innerWidth <= 768) {
-      setVisibleSide(false)
+    if (innerWidth <= 1024) {
+      setShowSide(false)
     } else {
-      setVisibleSide(true)
+      setShowSide(true)
     }
   }
 
@@ -37,31 +36,23 @@ export default function ProtectedRoute() {
   }, [])
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar onShowSide={() => setVisibleSide(!visibleSide)} />
-      <div className="relative flex flex-1">
-        <Transition
-          as={Fragment}
-          show={visibleSide}
-          enter="transform transition duration-[400ms]"
-          enterFrom="-translate-x-full"
-          enterTo="translate-x-0"
-          leave="transform duration-[400ms] transition ease-in-out"
-          leaveFrom="translate-x-0"
-          leaveTo="-translate-x-full"
-        >
-          <Sidebar visible={visibleSide} />
-        </Transition>
-        <main
-          className={clsx(
-            'flex w-full flex-1 flex-col transition-all duration-300',
-            visibleSide && 'md:ml-56',
-          )}
-        >
-          <div className="flex-1 p-6">
-            <Outlet />
-          </div>
-          <Footer />
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-6">
+      <Transition
+        as={Fragment}
+        show={showSide}
+        enter="transform transition duration-[400ms]"
+        enterFrom="-translate-x-full"
+        enterTo="translate-x-0"
+        leave="transform duration-[400ms] transition ease-in-out"
+        leaveFrom="translate-x-0"
+        leaveTo="-translate-x-full"
+      >
+        <Sidebar visible={showSide} onClose={() => setShowSide(false)} />
+      </Transition>
+      <div className={clsx('col-span-5 transition-all duration-300')}>
+        <Topbar onShowSide={() => setShowSide(!showSide)} />
+        <main className="p-6">
+          <Outlet />
         </main>
       </div>
     </div>

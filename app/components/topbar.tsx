@@ -1,5 +1,4 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Link } from '@remix-run/react'
 import { Fragment } from 'react'
 import {
   BarsIcon,
@@ -12,7 +11,7 @@ import {
   UserCircleIcon,
 } from './icons'
 
-export default function Navbar({
+export default function Topbar({
   onShowSide,
 }: {
   isMobile?: boolean
@@ -22,37 +21,37 @@ export default function Navbar({
     <div className="sticky inset-x-0 top-0 z-50 border-b bg-slate-50 p-6">
       <nav className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-0">
-          <button className="md:hidden" onClick={onShowSide}>
+          <button
+            onClick={onShowSide}
+            className="w-full items-center rounded-md p-1.5 text-sm leading-6 text-slate-400 shadow-sm lg:hidden"
+          >
             <span className="sr-only">Sidebar Button</span>
             <BarsIcon />
           </button>
-          <Link to="/" prefetch="intent">
-            <h1 className="font-bold">H-Labs</h1>
-          </Link>
+          <button
+            type="button"
+            className="hidden w-full items-center rounded-md p-1.5 text-sm leading-6 text-slate-400 shadow-sm ring-1 ring-slate-900/10 hover:ring-slate-300 lg:flex"
+          >
+            <span className="flex items-center gap-4">
+              <SearchIcon />
+              <span>Qué estás buscando...</span>
+            </span>
+            <span className="ml-auto flex-none pl-3 text-xs font-semibold">
+              Ctrl K
+            </span>
+          </button>
         </div>
-        <ul className="flex items-center gap-4">
-          <li>
-            <button>
-              <div className="flex items-center gap-2">
-                <SearchIcon />
-                <span className="sr-only sm:not-sr-only">Buscar...</span>
-              </div>
+        <ul className="flex items-center gap-2">
+          <li className="lg:hidden">
+            <button className="w-full items-center rounded-md p-2 text-sm leading-6 text-slate-400 shadow-sm lg:flex">
+              <SearchIcon />
+              <span className="sr-only">Search...</span>
             </button>
           </li>
           <li>
-            <button>
-              <div className="flex items-center gap-2">
-                <BellIcon />
-                <span className="sr-only">Notificaciones</span>
-              </div>
-            </button>
-          </li>
-          <li>
-            <button>
-              <div className="flex items-center gap-2">
-                <QuestionMarkCircleIcon />
-                <span className="sr-only">Ayuda</span>
-              </div>
+            <button className="w-full items-center rounded-md p-2 text-sm leading-6 text-slate-400 shadow-sm lg:flex">
+              <BellIcon />
+              <span className="sr-only">Notificaciones</span>
             </button>
           </li>
           <li>
@@ -112,6 +111,20 @@ function MenuButton() {
                     <div className="flex items-center gap-2">
                       <CogIcon />
                       <span>Preferencias</span>
+                    </div>
+                  </button>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md p-2 text-sm`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <QuestionMarkCircleIcon />
+                      <span>Ayuda</span>
                     </div>
                   </button>
                 )}
