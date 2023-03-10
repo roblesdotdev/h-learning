@@ -27,8 +27,8 @@ const EXTERNAL_LINKS = [
 
 const Sidebar = forwardRef<
   HTMLDivElement,
-  { visible: boolean; onClose: () => void }
->(({ onClose }, ref) => {
+  { visible: boolean; onClose: () => void; isMobile: boolean }
+>(({ onClose, isMobile }, ref) => {
   return (
     <div
       ref={ref}
@@ -55,7 +55,7 @@ const Sidebar = forwardRef<
                   to={link.to}
                   icon={link.icon}
                   title={link.title}
-                  onClick={onClose}
+                  onClick={isMobile ? onClose : undefined}
                 />
               </li>
             ))}

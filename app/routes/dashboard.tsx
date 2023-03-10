@@ -16,12 +16,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function DashboardLayout() {
   const [showSide, setShowSide] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
 
   function handleResize() {
     if (innerWidth <= 1024) {
       setShowSide(false)
+      setIsMobile(true)
     } else {
       setShowSide(true)
+      setIsMobile(false)
     }
   }
 
@@ -47,7 +50,11 @@ export default function DashboardLayout() {
         leaveFrom="translate-x-0"
         leaveTo="-translate-x-full"
       >
-        <Sidebar visible={showSide} onClose={() => setShowSide(false)} />
+        <Sidebar
+          visible={showSide}
+          onClose={() => setShowSide(false)}
+          isMobile={isMobile}
+        />
       </Transition>
       <div className={clsx('col-span-5 transition-all duration-300')}>
         <Topbar onShowSide={() => setShowSide(!showSide)} />
